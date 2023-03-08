@@ -1,41 +1,144 @@
-import { StyleSheet, Text, View, TextInput, ImageBackground, TouchableOpacity } from 'react-native';
+import { useState } from 'react';
+import {
+    StyleSheet, Text, View, TextInput,
+    ImageBackground, TouchableOpacity, KeyboardAvoidingView,
+    Alert, TouchableWithoutFeedback, Keyboard
+} from 'react-native';
 
 export default function SignIn() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [step, setStep] = useState(0);
+    const [name, setName] = useState('');
+    const [rptpassword, setRptPassword] = useState('');
+
+    function changeForm() {
+        if (step === 0) {
+            setStep(1);
+        } else {
+            setStep(0);
+        }
+    }
+
+    function handleSubmit() {
+        console.log('Dados enviados');
+        console.log({ email, password });
+    }
+
+    function validateForm() {
+        if (name === '') {
+            Alert.alert('Preencha o campo Nome');
+            return;
+        }if (email === '') {
+            Alert.alert('Preencha o campo Email');
+            return;
+        } if (password === '') {
+            Alert.alert('Preencha o campo Senha');
+            return;
+        } if (rptpassword === '') {
+            Alert.alert('Repita sua senha');
+            return;
+        } if (rptpassword !== password) {
+            Alert.alert('Senhas não conferem');
+            return;
+        }
+        handleSubmit();
+    }
+
     return (
-        <ImageBackground
-            style={styles.container}
-            source={{
-                uri:
-                    'https://th.bing.com/th/id/R.16034aa499468dcc29e0c3f4c190bdb7?rik=XMRlZRGfRElTEw&pid=ImgRaw&r=0',
-            }}
-            resizeMode="stretch"
-        >
-            <Text style={styles.title}>Bem-vindo</Text>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+            <ImageBackground
+                style={styles.container}
+                source={{
+                    uri:
+                        'https://png.pngtree.com/thumb_back/fh260/background/20210722/pngtree-dark-purple-gradient-wallpaper-background-image_750294.jpg',
+                }}
+                resizeMode="stretch"
+            >
 
-            <View style={styles.form}>
-                <Text style={styles.label}>E-mail</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Seu melhor e-mail"
-                    keyboardType='email-address'
-                />
+                <Text style={styles.title}>{step === 0 ? 'Bem-vindo' : 'Cadastre-se'}</Text>
 
-                <Text style={styles.label}>Senha</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Sua senha secreta"
-                    textSecurityEntry={true}
-                />
+                {step === 0 ? (
+                    <KeyboardAvoidingView style={styles.form} behavior="padding">
+                        <Text style={styles.label}>E-mail</Text>
+                        <TextInput
+                        
+                            style={styles.input}
+                            placeholder="Digite seu email"
+                            keyboardType='email-address'
+                            value={email}
+                            onChangeText={setEmail}
+                        />
 
-                <TouchableOpacity style={styles.button}>
-                    <Text style={styles.buttonText}>Entrar</Text>
-                </TouchableOpacity>
 
-                <TouchableOpacity>
-                    <Text style={[styles.label, { textAlign: 'center' }]}>Cadastre-se grátis!</Text>
-                </TouchableOpacity>
-            </View>
-        </ImageBackground>
+                        <Text style={styles.label}>Senha</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Digite sua senha"
+                            secureTextEntry={true}
+                            value={password}
+                            onChangeText={setPassword}
+                        />
+
+                        <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                            <Text style={styles.buttonText}>Entrar</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={changeForm}>
+                            <Text style={[styles.label, {
+                                textAlign: 'center',
+                                textDecorationLine: 'underline',
+                            }]}>Não possuo uma conta</Text>
+                        </TouchableOpacity>
+                    </KeyboardAvoidingView>
+
+                ) : (
+                    <KeyboardAvoidingView style={styles.form} behavior="padding">
+                        <Text style={styles.label}>Nome</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Digite seu Nome"
+                            value={name}
+                            onChangeText={setName}
+                        />
+                        <Text style={styles.label}>E-mail</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Digite seu email"
+                            keyboardType='email-address'
+                            value={email}
+                            onChangeText={setEmail}
+                        />
+
+                        <Text style={styles.label}>Senha</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Digite sua senha"
+                            secureTextEntry={true}
+                            value={password}
+                            onChangeText={setPassword}
+                        />
+                        <Text style={styles.label}>Repita sua senha</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Repita sua senha"
+                            secureTextEntry={true}
+                            value={rptpassword}
+                            onChangeText={setRptPassword}
+                        />
+
+                        <TouchableOpacity style={styles.button} onPress={validateForm}>
+                            <Text style={styles.buttonText}>Cadastrar</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity onPress={changeForm}>
+                            <Text style={[styles.label, { textAlign: 'center' }]}>Ja possuo uma conta</Text>
+                        </TouchableOpacity>
+                    </KeyboardAvoidingView>
+                )}
+
+            </ImageBackground>
+        </TouchableWithoutFeedback>
     );
 }
 
@@ -70,9 +173,10 @@ const styles = StyleSheet.create({
         height: 40,
         borderRadius: 20,
         padding: 12,
+        paddingHorizontal: 20,
     },
     button: {
-        backgroundColor: '#4dc15f',
+        backgroundColor: '#696969',
         height: 40,
         borderRadius: 20,
         marginTop: 30,
