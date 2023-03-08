@@ -62,7 +62,6 @@ export default function SignIn() {
                     <KeyboardAvoidingView style={styles.form} behavior="padding">
                         <Text style={styles.label}>E-mail</Text>
                         <TextInput
-                        
                             style={styles.input}
                             placeholder="Digite seu email"
                             keyboardType='email-address'
